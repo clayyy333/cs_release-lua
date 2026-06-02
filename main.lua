@@ -17,7 +17,7 @@ local HEARTBEAT_INTERVAL = 15
 local CHAT_REFRESH_INTERVAL = 3
 local ONLINE_REFRESH_INTERVAL = 5
 
-local BASE_RAW = "https://raw.githubusercontent.com/clayyy333/StrikeChat-lua/main/"
+local BASE_RAW = "https://raw.githubusercontent.com/clayyy333/cs_release-lua/main/"
 
 local Theme = loadstring(game:HttpGet(BASE_RAW .. "modules/theme.lua"))()
 local Api = loadstring(game:HttpGet(BASE_RAW .. "modules/api.lua"))()
