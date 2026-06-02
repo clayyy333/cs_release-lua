@@ -59,6 +59,7 @@ local esToEn = {
     ["Premio principal destacado"] = "Featured main reward",
     ["Comprar"] = "Buy",
     ["Generar codigo de Premio"] = "Generate Reward Code",
+    ["Aviso: Los Items comprados se aplican desde el Perfil/Inventario"] = "Notice: Purchased items are applied from Profile/Inventory",
     ["AGOTADO"] = "SOLD OUT",
     ["Comprando..."] = "Buying...",
     ["COMPRADO"] = "BOUGHT",

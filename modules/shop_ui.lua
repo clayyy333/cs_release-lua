@@ -447,6 +447,61 @@ function ShopUI.Create(parent, Theme, initialPoints)
     featuredPriceCorner.CornerRadius = UDim.new(0, 10)
     featuredPriceCorner.Parent = featuredPrice
 
+    local purchaseNotice = Instance.new("Frame")
+    purchaseNotice.Name = "PurchaseNotice"
+    purchaseNotice.Size = UDim2.new(0, 360, 0, 38)
+    purchaseNotice.Position = UDim2.new(0, 28, 0, 304)
+    purchaseNotice.BackgroundColor3 = Color3.fromRGB(14, 12, 22)
+    purchaseNotice.BackgroundTransparency = 0.42
+    purchaseNotice.BorderSizePixel = 0
+    purchaseNotice.Parent = root
+
+    local purchaseNoticeCorner = Instance.new("UICorner")
+    purchaseNoticeCorner.CornerRadius = UDim.new(0, 10)
+    purchaseNoticeCorner.Parent = purchaseNotice
+
+    local purchaseNoticeStroke = Instance.new("UIStroke")
+    purchaseNoticeStroke.Color = Color3.fromRGB(24, 22, 34)
+    purchaseNoticeStroke.Thickness = 1
+    purchaseNoticeStroke.Transparency = 0.35
+    purchaseNoticeStroke.Parent = purchaseNotice
+
+    local purchaseNoticeText = Instance.new("TextLabel")
+    purchaseNoticeText.Name = "NoticeText"
+    purchaseNoticeText.Size = UDim2.new(1, -18, 1, 0)
+    purchaseNoticeText.Position = UDim2.new(0, 9, 0, 0)
+    purchaseNoticeText.BackgroundTransparency = 1
+    purchaseNoticeText.Text = "Aviso: Los Items comprados se aplican desde el Perfil/Inventario"
+    purchaseNoticeText.TextColor3 = Color3.fromRGB(255, 220, 90)
+    purchaseNoticeText.Font = Theme.Font.Bold
+    purchaseNoticeText.TextSize = 10
+    purchaseNoticeText.TextWrapped = true
+    purchaseNoticeText.TextXAlignment = Enum.TextXAlignment.Center
+    purchaseNoticeText.TextYAlignment = Enum.TextYAlignment.Center
+    purchaseNoticeText.Parent = purchaseNotice
+
+    task.spawn(function()
+        local fadeOut = true
+
+        while purchaseNoticeText.Parent do
+            if fadeOut then
+                purchaseNoticeText.TextTransparency += 0.03
+
+                if purchaseNoticeText.TextTransparency >= 0.45 then
+                    fadeOut = false
+                end
+            else
+                purchaseNoticeText.TextTransparency -= 0.03
+
+                if purchaseNoticeText.TextTransparency <= 0 then
+                    fadeOut = true
+                end
+            end
+
+            task.wait(0.05)
+        end
+    end)
+
     local itemsContainer = Instance.new("ScrollingFrame")
     itemsContainer.Name = "ItemsContainer"
     itemsContainer.Size = UDim2.new(0, 470, 0, 360)
@@ -828,6 +883,9 @@ function ShopUI.Create(parent, Theme, initialPoints)
         featuredSubtitle.Position = UDim2.new(0, 14, 0, 86)
         featuredPrice.Size = UDim2.new(1, -28, 0, 38)
         featuredPrice.Position = UDim2.new(0, 14, 1, -50)
+        purchaseNotice.Size = UDim2.new(0, 340, 0, 34)
+        purchaseNotice.Position = UDim2.new(0, 24, 0, 266)
+        purchaseNoticeText.TextSize = 10
 
         itemsContainer.Position = UDim2.new(0, 408, 0, 66)
         itemsContainer.Size = UDim2.new(1, -424, 1, -88)
