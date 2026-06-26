@@ -40,7 +40,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     scroll.BorderSizePixel = 0
     scroll.ScrollBarThickness = 0
     scroll.ScrollingEnabled = true
-    scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 440)
     scroll.Parent = parent
 
     local scrollHint = Instance.new("Frame")
@@ -60,7 +60,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local content = Instance.new("Frame")
     content.Name = "LeftPanelContent"
-    content.Size = UDim2.new(1, 0, 0, 390)
+    content.Size = UDim2.new(1, 0, 0, 440)
     content.BackgroundTransparency = 1
     content.Parent = scroll
 
@@ -323,10 +323,11 @@ function LeftPanel.Create(parent, Theme, profile, player)
         UDim2.new(0.5, 5, 0, 158)
     )
 
-    createMenuButton("CrearSalas", "Crear Sala", "+", 204)
-    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 244)
-    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 284)
-    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 324)
+    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 212)
+    createMenuButton("CrearSalas", "Crear Sala", "+", 252)
+    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 292)
+    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 332)
+    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 372)
 
     local function setButtonLayout(button, y)
         if not button then
@@ -412,8 +413,8 @@ function LeftPanel.Create(parent, Theme, profile, player)
             scrollHint.Size = UDim2.new(0, 1, 1, -16)
             scrollHint.Position = UDim2.new(0, 1, 0, 8)
 
-            content.Size = UDim2.new(1, 0, 0, 366)
-            scroll.CanvasSize = UDim2.new(0, 0, 0, 374)
+            content.Size = UDim2.new(1, 0, 0, 404)
+            scroll.CanvasSize = UDim2.new(0, 0, 0, 412)
 
             avatar.Size = UDim2.new(0, 50, 0, 50)
             avatar.Position = UDim2.new(0, 14, 0, 12)
@@ -437,16 +438,17 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
             setButtonLayout(createdButtons.Tienda, 136)
             setButtonLayout(createdButtons.Perfil, 174)
-            setButtonLayout(createdButtons.CrearSalas, 212)
-            setButtonLayout(createdButtons.SalasPublicas, 250)
-            setButtonLayout(createdButtons.SalasPrivadas, 288)
-            setButtonLayout(createdButtons.TablaClanes, 326)
+            setButtonLayout(createdButtons.StrikeMusic, 212)
+            setButtonLayout(createdButtons.CrearSalas, 250)
+            setButtonLayout(createdButtons.SalasPublicas, 288)
+            setButtonLayout(createdButtons.SalasPrivadas, 326)
+            setButtonLayout(createdButtons.TablaClanes, 364)
         else
             scroll.ScrollBarThickness = 0
             scrollHint.Visible = false
 
-            content.Size = UDim2.new(1, 0, 0, 390)
-            scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
+            content.Size = UDim2.new(1, 0, 0, 440)
+            scroll.CanvasSize = UDim2.new(0, 0, 0, 440)
 
             avatar.Size = UDim2.new(0, 68, 0, 68)
             avatar.Position = UDim2.new(0, 14, 0, 14)
@@ -470,10 +472,11 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
             resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 158))
             resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 158))
-            resetMenuButton(createdButtons.CrearSalas, 204)
-            resetMenuButton(createdButtons.SalasPublicas, 244)
-            resetMenuButton(createdButtons.SalasPrivadas, 284)
-            resetMenuButton(createdButtons.TablaClanes, 324)
+            resetMenuButton(createdButtons.StrikeMusic, 212)
+            resetMenuButton(createdButtons.CrearSalas, 252)
+            resetMenuButton(createdButtons.SalasPublicas, 292)
+            resetMenuButton(createdButtons.SalasPrivadas, 332)
+            resetMenuButton(createdButtons.TablaClanes, 372)
         end
     end
 

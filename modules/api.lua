@@ -434,4 +434,493 @@ function Api.ClaimReward(
     )
 end
 
+function Api.GetPersonalMusicSession(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/session" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.OpenPersonalMusicSession(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/session/open" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.MinimizePersonalMusicSession(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/session/minimize" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.RestorePersonalMusicSession(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/session/restore" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.ClosePersonalMusicSession(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/session/close" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.SearchPersonalMusic(player, query, limit)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/search" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&q=" .. Api.Encode(query or "") ..
+        "&limit=" .. Api.Encode(limit or 6),
+        "GET"
+    )
+end
+
+
+function Api.CreatePersonalMusicDownload(player, downloadData)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        downloadData or {}
+    )
+end
+
+
+function Api.GetPersonalMusicDownloads(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.GetPersonalMusicDownload(player, downloadJobId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.PreparePersonalMusicDownload(player, downloadJobId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "/prepare" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.CompletePersonalMusicDownloadLocal(player, downloadJobId, fileKey, fileSizeBytes)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "/complete-local" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            file_key = fileKey,
+            file_size_bytes = fileSizeBytes
+        }
+    )
+end
+
+
+function Api.FailPersonalMusicDownload(player, downloadJobId, reason)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "/fail" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&reason=" .. Api.Encode(reason or "client_download_failed"),
+        "POST"
+    )
+end
+
+
+function Api.DeletePersonalMusicDownload(player, downloadJobId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
+function Api.GetStrikeMusicPopular(limit)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular" ..
+        "?limit=" .. Api.Encode(limit or 6),
+        "GET"
+    )
+end
+
+function Api.RegisterStrikeMusicPopularPlay(player, catalogTrackId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular/" .. Api.Encode(catalogTrackId) ..
+        "/play" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+function Api.RegisterStrikeMusicPersonalPopularPlay(player, payload)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular/play" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        payload or {}
+    )
+end
+
+function Api.AddPersonalRobloxAudio(player, audioId, title, artist)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library/roblox-audio" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            roblox_audio_id = audioId,
+            title = title,
+            artist = artist
+        }
+    )
+end
+function Api.GetPersonalMusicLibrary(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.AddPersonalMusicLibraryItem(player, itemData)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        itemData or {}
+    )
+end
+
+
+function Api.RebuildPersonalMusicLibraryLocal(player, items)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library/rebuild-local" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            items = items or {}
+        }
+    )
+end
+
+
+function Api.SyncPersonalMusicLibraryFiles(player, existingFileKeys)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library/sync-files" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            existing_file_keys = existingFileKeys or {}
+        }
+    )
+end
+
+
+function Api.DeletePersonalMusicLibraryItem(player, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library/" .. Api.Encode(libraryItemId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
+
+function Api.GetPersonalMusicQueue(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/queue" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.AddPersonalMusicQueueItem(player, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/queue" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            library_item_id = libraryItemId
+        }
+    )
+end
+
+
+function Api.DeletePersonalMusicQueueItem(player, queueItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/queue/" .. Api.Encode(queueItemId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
+
+function Api.ClearPersonalMusicQueue(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/queue/clear" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.GetPersonalMusicPlayback(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.StartPersonalMusicPlayback(player, libraryItemId, source, positionSeconds, libraryAutoplayEnabled)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/start" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            library_item_id = libraryItemId,
+            source = source or "manual",
+            position_seconds = positionSeconds or 0,
+            library_autoplay_enabled = libraryAutoplayEnabled ~= false
+        }
+    )
+end
+
+
+function Api.PausePersonalMusicPlayback(player, positionSeconds)
+    local body = nil
+
+    if positionSeconds then
+        body = {
+            position_seconds = positionSeconds
+        }
+    end
+
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/pause" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        body
+    )
+end
+
+
+function Api.ResumePersonalMusicPlayback(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/resume" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.StopPersonalMusicPlayback(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/stop" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.UpdatePersonalMusicPlaybackPosition(player, positionSeconds)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/position" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            position_seconds = positionSeconds or 0
+        }
+    )
+end
+
+
+function Api.PlayNextPersonalMusic(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playback/next" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.GetPersonalMusicHistory(player, limit)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/history" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&limit=" .. Api.Encode(limit or 25),
+        "GET"
+    )
+end
+
+
+function Api.ClearPersonalMusicHistory(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/history/clear" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+
+function Api.GetPersonalMusicFavorites(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/favorites" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.AddPersonalMusicFavorite(player, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/favorites" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&library_item_id=" .. Api.Encode(libraryItemId),
+        "POST"
+    )
+end
+
+
+function Api.DeletePersonalMusicFavorite(player, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/favorites/" .. Api.Encode(libraryItemId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
+
+function Api.GetPersonalMusicPlaylists(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.CreatePersonalMusicPlaylist(player, name)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            name = name
+        }
+    )
+end
+
+
+function Api.GetPersonalMusicPlaylist(player, playlistId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists/" .. Api.Encode(playlistId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.DeletePersonalMusicPlaylist(player, playlistId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists/" .. Api.Encode(playlistId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
+
+function Api.AddPersonalMusicPlaylistItem(player, playlistId, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists/" .. Api.Encode(playlistId) ..
+        "/items" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            library_item_id = libraryItemId
+        }
+    )
+end
+
+
+function Api.DeletePersonalMusicPlaylistItem(player, playlistId, libraryItemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/playlists/" .. Api.Encode(playlistId) ..
+        "/items/" .. Api.Encode(libraryItemId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
 return Api
