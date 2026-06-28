@@ -3,6 +3,7 @@ local LeftPanel = {}
 function LeftPanel.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
     local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
 
     local function getViewportSize()
         local camera = workspace.CurrentCamera
@@ -225,6 +226,122 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local createdButtons = {}
 
+    local function applyAnimatedBorder(guiObject)
+        if not guiObject or guiObject:GetAttribute("StrikeMusicAnimatedBorderApplied") then
+            return
+        end
+
+        guiObject:SetAttribute("StrikeMusicAnimatedBorderApplied", true)
+
+        local stroke = guiObject:FindFirstChild("StrikeMusicAnimatedBorder")
+
+        if not stroke then
+            stroke = Instance.new("UIStroke")
+            stroke.Name = "StrikeMusicAnimatedBorder"
+            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            stroke.Color = Color3.fromRGB(255, 255, 255)
+            stroke.Thickness = 1.6
+            stroke.Transparency = 0.05
+            stroke.Parent = guiObject
+        end
+
+        local gradient = stroke:FindFirstChild("StrikeMusicBorderGradient")
+
+        if not gradient then
+            gradient = Instance.new("UIGradient")
+            gradient.Name = "StrikeMusicBorderGradient"
+            gradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 80, 255)),
+                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
+            })
+            gradient.Rotation = 0
+            gradient.Parent = stroke
+        end
+
+        local borderPalettes = {
+            ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 80, 255)),
+                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
+            }),
+            ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 92, 198)),
+                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(190, 115, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
+            })
+        }
+
+        task.spawn(function()
+            local rotation = 0
+            local paletteIndex = 1
+
+            while guiObject.Parent and stroke.Parent and gradient.Parent do
+                gradient.Color = borderPalettes[paletteIndex]
+                paletteIndex = paletteIndex == #borderPalettes and 1 or paletteIndex + 1
+                rotation += 360
+
+                local tween = TweenService:Create(
+                    gradient,
+                    TweenInfo.new(4.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+                    {
+                        Rotation = rotation
+                    }
+                )
+
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end)
+    end
+    local function applyAnimatedTextColor(guiObject)
+        if not guiObject or guiObject:GetAttribute("StrikeMusicAnimatedTextApplied") then
+            return
+        end
+
+        local label = guiObject:FindFirstChild("Label")
+
+        if not label or not label:IsA("TextLabel") then
+            return
+        end
+
+        guiObject:SetAttribute("StrikeMusicAnimatedTextApplied", true)
+
+        local colors = {
+            Theme.Colors.Text,
+            Color3.fromRGB(190, 115, 255),
+            Color3.fromRGB(255, 92, 198),
+            Color3.fromRGB(78, 190, 92),
+            Color3.fromRGB(120, 220, 255),
+            Color3.fromRGB(245, 245, 245)
+        }
+
+        task.spawn(function()
+            local index = 1
+
+            while guiObject.Parent and label.Parent do
+                index += 1
+
+                if index > #colors then
+                    index = 1
+                end
+
+                local tween = TweenService:Create(
+                    label,
+                    TweenInfo.new(1.25, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        TextColor3 = colors[index]
+                    }
+                )
+
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end)
+    end
     local function createTopButton(name, text, icon, size, position)
         local btn = Instance.new("TextButton")
         btn.Name = name .. "Button"
@@ -307,12 +424,16 @@ function LeftPanel.Create(parent, Theme, profile, player)
         return btn
     end
 
+    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 158)
+    applyAnimatedBorder(createdButtons.StrikeMusic)
+    applyAnimatedTextColor(createdButtons.StrikeMusic)
+
     createTopButton(
         "Tienda",
         "Tienda",
         "🛒",
         UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0, 14, 0, 158)
+        UDim2.new(0, 14, 0, 198)
     )
 
     createTopButton(
@@ -320,14 +441,12 @@ function LeftPanel.Create(parent, Theme, profile, player)
         "Perfil",
         "👤",
         UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0.5, 5, 0, 158)
+        UDim2.new(0.5, 5, 0, 198)
     )
-
-    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 212)
-    createMenuButton("CrearSalas", "Crear Sala", "+", 252)
-    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 292)
-    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 332)
-    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 372)
+    createMenuButton("CrearSalas", "Crear Sala", "+", 244)
+    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 284)
+    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 324)
+    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 364)
 
     local function setButtonLayout(button, y)
         if not button then
@@ -436,9 +555,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
             pointsIcon.Size = UDim2.new(0, 18, 0, 18)
             pointsIcon.Position = UDim2.new(0.5, -9, 0.5, -9)
 
-            setButtonLayout(createdButtons.Tienda, 136)
-            setButtonLayout(createdButtons.Perfil, 174)
-            setButtonLayout(createdButtons.StrikeMusic, 212)
+            setButtonLayout(createdButtons.StrikeMusic, 136)
+            setButtonLayout(createdButtons.Tienda, 174)
+            setButtonLayout(createdButtons.Perfil, 212)
             setButtonLayout(createdButtons.CrearSalas, 250)
             setButtonLayout(createdButtons.SalasPublicas, 288)
             setButtonLayout(createdButtons.SalasPrivadas, 326)
@@ -470,13 +589,13 @@ function LeftPanel.Create(parent, Theme, profile, player)
             pointsIcon.Size = UDim2.new(0, 20, 0, 20)
             pointsIcon.Position = UDim2.new(0.5, -10, 0.5, -10)
 
-            resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 158))
-            resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 158))
-            resetMenuButton(createdButtons.StrikeMusic, 212)
-            resetMenuButton(createdButtons.CrearSalas, 252)
-            resetMenuButton(createdButtons.SalasPublicas, 292)
-            resetMenuButton(createdButtons.SalasPrivadas, 332)
-            resetMenuButton(createdButtons.TablaClanes, 372)
+            resetMenuButton(createdButtons.StrikeMusic, 158)
+            resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 198))
+            resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 198))
+            resetMenuButton(createdButtons.CrearSalas, 244)
+            resetMenuButton(createdButtons.SalasPublicas, 284)
+            resetMenuButton(createdButtons.SalasPrivadas, 324)
+            resetMenuButton(createdButtons.TablaClanes, 364)
         end
     end
 
@@ -500,3 +619,8 @@ function LeftPanel.Create(parent, Theme, profile, player)
 end
 
 return LeftPanel
+
+
+
+
+
