@@ -1,5 +1,7 @@
 local StrikeMusicClient = {}
 
+local MAX_DOWNLOAD_DURATION_SECONDS = 600
+
 local httpRequest =
     request or
     http_request or
@@ -178,12 +180,33 @@ function StrikeMusicClient.Create(Api, Storage)
     end
 
     function client.CreateDownload(player, result, mediaType)
+        local durationSeconds = tonumber(result and result.duration_seconds)
+
+        if durationSeconds and durationSeconds > MAX_DOWNLOAD_DURATION_SECONDS then
+            print("StrikeMusic: download blocked by duration", tostring(durationSeconds))
+
+            if _G.StrikeMusicShowLongMediaWarning then
+                _G.StrikeMusicShowLongMediaWarning()
+            end
+            return {
+                status = "blocked",
+                reason = "duration_too_long",
+                max_duration_seconds = MAX_DOWNLOAD_DURATION_SECONDS
+            }
+        end
+
         print("StrikeMusic: creating job", tostring(mediaType), tostring(result and result.source_id or "unknown"))
 
         local createResult = Api.CreatePersonalMusicDownload(
             player,
             client.BuildDownloadData(result, mediaType)
         )
+
+        if createResult and createResult.reason == "duration_too_long" then
+            if _G.StrikeMusicShowLongMediaWarning then
+                _G.StrikeMusicShowLongMediaWarning()
+            end
+        end
 
         print("StrikeMusic: job created", tostring(createResult and createResult.status or "nil"), tostring(createResult and createResult.reason or ""))
         return createResult
@@ -815,3 +838,5 @@ function StrikeMusicClient.Create(Api, Storage)
 end
 
 return StrikeMusicClient
+
+

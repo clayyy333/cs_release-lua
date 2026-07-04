@@ -16,6 +16,7 @@ local COLORS = {
 
 local TITLE_FONT = Enum.Font.GothamBold
 local SECTION_TITLE_FONT = Enum.Font.GothamMedium
+local MAX_DOWNLOAD_DURATION_SECONDS = 600
 
 local function tr(text)
     local i18n = _G.StrikeChatI18n
@@ -200,6 +201,93 @@ local function createEmptyState(parent, text)
     return empty
 end
 
+local function isMediaTooLong(item)
+    local durationSeconds = tonumber(item and item.duration_seconds)
+
+    return durationSeconds and durationSeconds > MAX_DOWNLOAD_DURATION_SECONDS
+end
+
+local function showLongMediaWarning(guiObject)
+    local gui = guiObject and guiObject:FindFirstAncestorOfClass("ScreenGui")
+
+    if not gui then
+        return
+    end
+
+    local existing = gui:FindFirstChild("StrikeMusicLongMediaWarning")
+
+    if existing then
+        existing:Destroy()
+    end
+
+    local overlay = Instance.new("TextButton")
+    overlay.Name = "StrikeMusicLongMediaWarning"
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    overlay.BackgroundTransparency = 0.42
+    overlay.BorderSizePixel = 0
+    overlay.Text = ""
+    overlay.AutoButtonColor = false
+    overlay.ZIndex = 250
+    overlay.Parent = gui
+
+    local box = Instance.new("Frame")
+    box.Name = "Dialog"
+    box.Size = UDim2.new(0, 360, 0, 148)
+    box.Position = UDim2.new(0.5, -180, 0.5, -74)
+    box.BackgroundColor3 = COLORS.Panel
+    box.BackgroundTransparency = 0.02
+    box.BorderSizePixel = 0
+    box.ZIndex = 251
+    box.Parent = overlay
+    createCorner(box, 10)
+    createStroke(box, COLORS.Border, 0.25, 1)
+
+    local title = createLabel(
+        box,
+        "Title",
+        tr("Musica / Video largo"),
+        UDim2.new(1, -32, 0, 28),
+        UDim2.new(0, 16, 0, 18),
+        18,
+        Enum.Font.GothamBold,
+        COLORS.Text
+    )
+    title.ZIndex = 252
+
+    local message = createLabel(
+        box,
+        "Message",
+        tr("Elige otra opcion menos pesada. Limite: 10 minutos."),
+        UDim2.new(1, -32, 0, 40),
+        UDim2.new(0, 16, 0, 52),
+        13,
+        Enum.Font.Gotham,
+        COLORS.Muted
+    )
+    message.TextWrapped = true
+    message.ZIndex = 252
+
+    local accept = createIconButton(
+        box,
+        "AcceptButton",
+        tr("Aceptar"),
+        UDim2.new(0, 116, 0, 34),
+        UDim2.new(1, -132, 1, -48)
+    )
+    accept.BackgroundColor3 = COLORS.Purple
+    accept.TextSize = 13
+    accept.ZIndex = 252
+
+    local function close()
+        if overlay.Parent then
+            overlay:Destroy()
+        end
+    end
+
+    overlay.MouseButton1Click:Connect(close)
+    accept.MouseButton1Click:Connect(close)
+end
 local function clearContainer(container)
     for _, child in ipairs(container:GetChildren()) do
         if child:IsA("GuiObject")
@@ -605,10 +693,22 @@ local function createCard(parent, item, width, height, onPlay, onDownload)
 
         mp3Button.MouseButton1Click:Connect(function()
             print("StrikeMusic: MP3 pressed", tostring(item and item.source_id or "unknown"))
+
+            if isMediaTooLong(item) then
+                showLongMediaWarning(card)
+                return
+            end
+
             onDownload(item, "mp3")
         end)
         mp4Button.MouseButton1Click:Connect(function()
             print("StrikeMusic: MP4 pressed", tostring(item and item.source_id or "unknown"))
+
+            if isMediaTooLong(item) then
+                showLongMediaWarning(card)
+                return
+            end
+
             onDownload(item, "mp4")
         end)
     elseif item and item.playable == false then
@@ -2389,6 +2489,10 @@ function StrikeMusicUI.Create(parent, Theme)
         root.Visible = true
     end)
 
+    _G.StrikeMusicShowLongMediaWarning = function()
+        showLongMediaWarning(root)
+    end
+
     local api = {
         Gui = gui,
         Root = root,
@@ -2600,3 +2704,5 @@ function StrikeMusicUI.Create(parent, Theme)
 end
 
 return StrikeMusicUI
+
+
